@@ -29,9 +29,13 @@ func handler(request events.APIGatewayProxyRequest) (*events.APIGatewayProxyResp
 		bodyParts = append(bodyParts, RenderNode(node))
 	}
 
+	headers := map[string]string{
+		"Access-Control-Allow-Origin": "*",
+	}
 	return &events.APIGatewayProxyResponse{
 		StatusCode: 200,
 		Body:       strings.Join(bodyParts[:], ""),
+		Headers:    headers,
 	}, nil
 }
 
