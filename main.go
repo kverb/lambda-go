@@ -4,7 +4,6 @@ import (
 	"strings"
 
 	"github.com/aws/aws-lambda-go/events"
-	"github.com/aws/aws-lambda-go/lambda"
 	"golang.org/x/net/html"
 	"golang.org/x/net/html/atom"
 )
@@ -40,6 +39,7 @@ func handler(request events.APIGatewayProxyRequest) (*events.APIGatewayProxyResp
 }
 
 func main() {
+	test()
 	// Make the handler available for Remote Procedure Call by AWS Lambda
-	lambda.Start(handler)
+	// lambda.Start(handler)
 }

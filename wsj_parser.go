@@ -2,8 +2,8 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"io"
+	"log"
 	"os"
 
 	"golang.org/x/net/html"
@@ -50,8 +50,11 @@ func TraverseNode(doc *html.Node, filter func(node *html.Node) bool) (nodes []*h
 	var f func(*html.Node)
 	f = func(n *html.Node) {
 		if filter(n) {
-			fmt.Println(RenderNode(n))
-			nodes = append(nodes, n)
+			if len(nodes) == 0 {
+				nodes = append(nodes, n)
+			} else if RenderNode(nodes[len(nodes)-1]) != RenderNode(n) { // de-duplicate
+				nodes = append(nodes, n)
+			}
 		}
 		for c := n.FirstChild; c != nil; c = c.NextSibling {
 			f(c)
@@ -94,6 +97,8 @@ func RenderNode(n *html.Node) string {
 
 func test() {
 
+	log.Print("Starting test html")
+
 	// data := strings.NewReader(htm)
 	data, err := os.Open("sample-site/wsj-article1.html")
 	Check(err)
@@ -108,6 +113,8 @@ func test() {
 	}
 
 	article := PickArticleNode(doc)
-	TraverseNode(article, filter)
-
+	nodes := TraverseNode(article, filter)
+	for _, node := range nodes {
+		log.Print(RenderNode(node))
+	}
 }
